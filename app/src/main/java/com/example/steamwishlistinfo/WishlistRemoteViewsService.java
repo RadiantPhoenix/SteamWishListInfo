@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -63,7 +62,7 @@ public class WishlistRemoteViewsService extends RemoteViewsService {
         private final Context context;
         private AppWidgetManager appWidgetManager;
         private int[] appWidgetIds;
-        private final int dataUpdateInterval = 30;
+        private final int dataUpdateInterval = 10;
 
 
         WishlistRemoteViewsFactory(Context context, AppWidgetManager appWidgetManager,
@@ -78,7 +77,7 @@ public class WishlistRemoteViewsService extends RemoteViewsService {
             gamesList = new ArrayList<>();
             lastDataUpdate = Calendar.getInstance();
             lastDataUpdate.add(Calendar.SECOND, -2 * dataUpdateInterval);
-            loadSettings();
+            //loadSettings();
         }
 
         @Override
@@ -228,8 +227,7 @@ public class WishlistRemoteViewsService extends RemoteViewsService {
             Calendar checkDate = (Calendar) lastDataUpdate.clone();
             checkDate.add(Calendar.SECOND, dataUpdateInterval);
             if (checkDate.before(Calendar.getInstance())
-                    && !DEFAULT_USER_ID.equals(userId)
-                    && !gamesList.isEmpty()) {
+                    && !DEFAULT_USER_ID.equals(userId)) {
                 lastDataUpdate = Calendar.getInstance();
                 setDefaultMessage(LOADING_WISHLIST_DATA);
 
