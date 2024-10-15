@@ -264,7 +264,7 @@ public class WishlistRemoteViewsService extends RemoteViewsService {
                     .build();
 
             SteamApi api = retrofit.create(SteamApi.class);
-            Call<Map<String, Game>> call = api.getWishlistData(userId); //"76561198138285528"
+            Call<Map<String, Game>> call = api.getWishlistData(userId);
 
             call.enqueue(new Callback<Map<String, Game>>() {
                 @Override
