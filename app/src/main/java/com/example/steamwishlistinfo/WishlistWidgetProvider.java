@@ -4,6 +4,8 @@ import static com.example.steamwishlistinfo.SettingsActivity.PREFS_NAME;
 import static com.example.steamwishlistinfo.SettingsActivity.PREF_USER_ID;
 import static com.example.steamwishlistinfo.WishlistRemoteViewsService.DEFAULT_USER_ID;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -20,18 +22,31 @@ public class WishlistWidgetProvider extends AppWidgetProvider {
     private static final String ACTION_SETTINGS = "com.example.steamwishlistinfo.SETTINGS";
     private String userId;
 
+    @SuppressLint("MissingPermission")
+    private void scheduleWidgetUpdates(Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, WishlistWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis() + (3600 * 1000L), pendingIntent);
+    }
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Toast.makeText(context, "Update pressed", Toast.LENGTH_LONG).show();
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
+        scheduleWidgetUpdates(context);
     }
 
     @Override
     public void onEnabled(Context context) {
         super.onEnabled(context);
-
+        scheduleWidgetUpdates(context);
     }
 
     @Override
@@ -44,7 +59,7 @@ public class WishlistWidgetProvider extends AppWidgetProvider {
                     appWidgetManager.getAppWidgetIds(widgetComponent), R.id.wishlist_list);
             loadProfileData(context, appWidgetManager, appWidgetManager.getAppWidgetIds(widgetComponent));
         } else if (ACTION_SETTINGS.equals(intent.getAction())) {
-            Toast.makeText(context, "Settings Button 1", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Settings Button pressed", Toast.LENGTH_LONG).show();
         }
     }
 
