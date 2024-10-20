@@ -19,4 +19,13 @@
         android:layout_height="wrap_content"
         android:text="Save" />
 
+    <TextView
+        android:id="@+id/user_guide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minLines="2"
+        android:maxLines="5"
+        android:text="Please choose SteamWishListInfo from the widgets' list and place it on the main screen to view games with their prices and discounts. "
+        android:gravity="top|center"/>
+
 </LinearLayout>
